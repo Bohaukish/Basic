@@ -149,9 +149,54 @@ AND w1.Temperature>w2.Temperature;
 
 262. Trips and Users
      
-     题干好长明天写
+想不通
 
 263. Big Countries
      
-  EZ
+EZ
 
+596.   Classes More Than 5 Students
+```
+SELECT class
+FROM courses
+GROUP BY class
+HAVING COUNT(DISTINCT student) >= 5;
+  ```
+或者sub-query
+```
+SELECT class
+FROM(
+        SELECT class, COUNT(DISTINCT student) AS num
+        FROM courses
+        GROUP BY class) AS blahblah
+WHERE num>=5;
+  ```
+
+620.   Not Boring Movies
+     
+只有<>是标准的sql语法，可以移植，另一个是!=
+```
+SELECT id, movie, description, rating
+FROM cinema
+WHERE MOD(id,2)='1' AND description<>'boring'
+ORDER BY rating DESC;
+  ```
+
+626.   Exchange Seats
+
+CASE 语句，总数counts弄在副表里面
+
+```
+SELECT 
+    (CASE
+        # 奇数id+1 最后一个数是奇数id不变；偶数-1 最后一个数字如果是偶数也-1 最后一个数是奇数不变
+        WHEN MOD(id, 2)<>0 AND id<counts THEN id+1
+        WHEN MOD(id, 2)<>0 AND id=counts THEN id
+        WHEN MOD(id, 2)=0 AND id<=counts THEN id-1
+    END) AS id, student
+FROM seat, (   
+        SELECT COUNT(*) AS counts
+        FROM seat
+) AS temp
+ORDER BY id ASC;
+  ```
